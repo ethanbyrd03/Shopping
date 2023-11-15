@@ -6,4 +6,12 @@ public interface Product {
 
   /** Gets the product's base price in dollars */
   double getBasePrice();
+
+  void setInventory(int amt);
+
+  int getInventory();
+
+  void setSalePrice(double pctOff);
+
+  double getSalePrice();
 }
