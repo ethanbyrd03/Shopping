@@ -8,6 +8,9 @@ public class OutOfStockEvent implements StoreEvent {
   private final Store _store;
 
   public OutOfStockEvent(Product product, Store store) {
+    if (product == null || store == null) {
+      throw new IllegalArgumentException();
+    }
     this._product = product;
     this._store = store;
   }

@@ -56,7 +56,7 @@ public class CustomerImpl implements Customer {
               + event.getProduct().getName()
               + " at "
               + event.getStore().getName()
-              + " has ended.");
+              + " has ended");
     }
     if (event.getClass() == PurchaseEvent.class) {
       System.out.println(
@@ -64,21 +64,21 @@ public class CustomerImpl implements Customer {
               + event.getProduct().getName()
               + " at "
               + event.getStore().getName()
-              + ".");
+              );
     }
     if (event.getClass() == OutOfStockEvent.class) {
       System.out.println(
           event.getProduct().getName()
               + " is now out of stock at "
               + event.getStore().getName()
-              + ".");
+              );
     }
     if (event.getClass() == BackInStockEvent.class) {
       System.out.println(
           event.getProduct().getName()
               + " is back in stock at "
               + event.getStore().getName()
-              + ".");
+              );
     }
   }
 }
