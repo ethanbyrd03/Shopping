@@ -30,7 +30,7 @@ public class CustomerImpl implements Customer {
 
   @Override
   public void purchaseProduct(Product product, Store store) {
-    if (product == null || store == null) {
+    if (product == null || store == null || product.getSalePrice() > _budget) {
       throw new IllegalArgumentException();
     }
     if (product.getBasePrice() > this._budget) {
