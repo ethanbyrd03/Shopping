@@ -30,11 +30,11 @@ public class CustomerImpl implements Customer {
 
   @Override
   public void purchaseProduct(Product product, Store store) {
-    if (product == null || store == null || product.getSalePrice() > _budget) {
+    if (product == null || store == null) {
       throw new IllegalArgumentException();
     }
     if (product.getBasePrice() > this._budget) {
-      return;
+      throw new IndexOutOfBoundsException();
     }
     ReceiptItem receipt = store.purchaseProduct(product);
     this._history.add(receipt);
