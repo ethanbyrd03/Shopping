@@ -1,6 +1,8 @@
 package com.comp301.a08shopping;
 
 import com.comp301.a08shopping.events.*;
+import com.comp301.a08shopping.exceptions.OutOfStockException;
+import com.comp301.a08shopping.exceptions.ProductNotFoundException;
 import java.util.*;
 
 public class StoreImpl implements Store {
@@ -24,21 +26,31 @@ public class StoreImpl implements Store {
 
   @Override
   public void addObserver(StoreObserver observer) {
+    if (observer == null) {
+      throw new IllegalArgumentException();
+    }
     this._customers.add(observer);
   }
 
   @Override
   public void removeObserver(StoreObserver observer) {
+    if (observer == null) {
+      throw new IllegalArgumentException();
+    }
     this._customers.remove(observer);
   }
 
   @Override
   public List<Product> getProducts() {
-    return this._products;
+    List<Product> a = this._products;
+    return a;
   }
 
   @Override
   public Product createProduct(String name, double basePrice, int inventory) {
+    if (name == null || basePrice < 0.00 || inventory < 0) {
+      throw new IllegalArgumentException();
+    }
     Product result = new ProductImpl(name, basePrice);
     result.setInventory(inventory);
     _products.add(result);
@@ -47,8 +59,17 @@ public class StoreImpl implements Store {
 
   @Override
   public ReceiptItem purchaseProduct(Product product) {
+    if (product == null) {
+      throw new IllegalArgumentException();
+    }
+    if (!this._products.contains(product)) {
+      throw new ProductNotFoundException();
+    }
     int ind = _products.indexOf(product);
     int inv1 = _products.get(ind).getInventory();
+    if (inv1 == 0) {
+      throw new OutOfStockException();
+    }
     _products.get(ind).setInventory(inv1 - 1);
     StoreEvent i = new PurchaseEvent(product, this);
     notify(i);
@@ -61,14 +82,28 @@ public class StoreImpl implements Store {
 
   @Override
   public void restockProduct(Product product, int numItems) {
+    if (product == null || numItems < 0) {
+      throw new IllegalArgumentException();
+    }
+    if (!this._products.contains(product)) {
+      throw new ProductNotFoundException();
+    }
     int index = this._products.indexOf(product);
+    if (this._products.get(index).getInventory() == 0) {
+      StoreEvent i = new BackInStockEvent(product, this);
+      notify(i);
+    }
     this._products.get(index).setInventory(numItems);
-    StoreEvent i = new BackInStockEvent(product, this);
-    notify(i);
   }
 
   @Override
   public void startSale(Product product, double percentOff) {
+    if (product == null || percentOff > 1.00) {
+      throw new IllegalArgumentException();
+    }
+    if (!this._products.contains(product)) {
+      throw new ProductNotFoundException();
+    }
     int index = this._products.indexOf(product);
     this._products.get(index).setSalePrice(percentOff);
     StoreEvent i = new SaleStartEvent(product, this);
@@ -77,20 +112,38 @@ public class StoreImpl implements Store {
 
   @Override
   public void endSale(Product product) {
+    if (product == null) {
+      throw new IllegalArgumentException();
+    }
+    if (!this._products.contains(product)) {
+      throw new ProductNotFoundException();
+    }
     int index = this._products.indexOf(product);
-    this._products.get(index).setSalePrice(1.00);
+    this._products.get(index).setSalePrice(0.00);
     StoreEvent i = new SaleEndEvent(product, this);
     notify(i);
   }
 
   @Override
   public int getProductInventory(Product product) {
+    if (product == null) {
+      throw new IllegalArgumentException();
+    }
+    if (!this._products.contains(product)) {
+      throw new ProductNotFoundException();
+    }
     int index = this._products.indexOf(product);
     return this._products.get(index).getInventory();
   }
 
   @Override
   public boolean getIsInStock(Product product) {
+    if (product == null) {
+      throw new IllegalArgumentException();
+    }
+    if (!this._products.contains(product)) {
+      throw new ProductNotFoundException();
+    }
     int inv = getProductInventory(product);
     if (inv > 0) {
       return true;
@@ -101,12 +154,24 @@ public class StoreImpl implements Store {
 
   @Override
   public double getSalePrice(Product product) {
+    if (product == null) {
+      throw new IllegalArgumentException();
+    }
+    if (!this._products.contains(product)) {
+      throw new ProductNotFoundException();
+    }
     int ind = _products.indexOf(product);
     return _products.get(ind).getSalePrice();
   }
 
   @Override
   public boolean getIsOnSale(Product product) {
+    if (product == null) {
+      throw new IllegalArgumentException();
+    }
+    if (!this._products.contains(product)) {
+      throw new ProductNotFoundException();
+    }
     int ind = _products.indexOf(product);
     double salePrice = _products.get(ind).getSalePrice();
     double basePrice = _products.get(ind).getBasePrice();
