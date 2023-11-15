@@ -30,6 +30,9 @@ public class CustomerImpl implements Customer {
 
   @Override
   public void purchaseProduct(Product product, Store store) {
+    if (product == null || store == null) {
+      throw new IllegalArgumentException();
+    }
     ReceiptItem receipt = store.purchaseProduct(product);
     this._history.add(receipt);
     this._budget -= receipt.getPricePaid();

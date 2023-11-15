@@ -71,6 +71,10 @@ public class StoreImpl implements Store {
       throw new OutOfStockException();
     }
     _products.get(ind).setInventory(inv1 - 1);
+    if (_products.get(ind).getInventory() == 0) {
+      StoreEvent j = new OutOfStockEvent(product, this);
+      notify(j);
+    }
     StoreEvent i = new PurchaseEvent(product, this);
     notify(i);
     if (getIsOnSale(product)) {
