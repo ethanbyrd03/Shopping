@@ -33,7 +33,7 @@ public class CustomerImpl implements Customer {
     if (product == null || store == null) {
       throw new IllegalArgumentException();
     }
-    if (product.getSalePrice() > this._budget) {
+    if (store.getSalePrice(product) > this._budget) {
       throw new IllegalStateException();
     }
     ReceiptItem receipt = store.purchaseProduct(product);
