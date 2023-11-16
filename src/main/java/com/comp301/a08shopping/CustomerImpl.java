@@ -36,7 +36,7 @@ public class CustomerImpl implements Customer {
       throw new IllegalArgumentException();
     }
     if (product.getBasePrice() > this._budget) {
-      throw new ProductNotFoundException();
+      throw new IndexOutOfBoundsException();
     }
     ReceiptItem receipt = store.purchaseProduct(product);
     this._history.add(receipt);
