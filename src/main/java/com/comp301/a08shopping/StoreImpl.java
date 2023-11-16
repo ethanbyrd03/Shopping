@@ -7,8 +7,8 @@ import java.util.*;
 
 public class StoreImpl implements Store {
   private final String _name;
-  private List<StoreObserver> _customers;
-  private List<Product> _products;
+  private final List<StoreObserver> _customers;
+  private final List<Product> _products;
 
   public StoreImpl(String name) {
     if (name == null) {
@@ -42,7 +42,7 @@ public class StoreImpl implements Store {
 
   @Override
   public List<Product> getProducts() {
-    List<Product> a = this._products;
+    List<Product> a = new ArrayList<>(this._products);
     return a;
   }
 
@@ -149,11 +149,7 @@ public class StoreImpl implements Store {
       throw new ProductNotFoundException();
     }
     int inv = getProductInventory(product);
-    if (inv > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return inv > 0;
   }
 
   @Override
@@ -179,11 +175,7 @@ public class StoreImpl implements Store {
     int ind = _products.indexOf(product);
     double salePrice = _products.get(ind).getSalePrice();
     double basePrice = _products.get(ind).getBasePrice();
-    if (salePrice < basePrice) {
-      return true;
-    } else {
-      return false;
-    }
+    return salePrice < basePrice;
   }
 
   private void notify(StoreEvent event) {
