@@ -1,6 +1,7 @@
 package com.comp301.a08shopping;
 
 import com.comp301.a08shopping.events.*;
+import com.comp301.a08shopping.exceptions.OutOfStockException;
 import com.comp301.a08shopping.exceptions.ProductNotFoundException;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class CustomerImpl implements Customer {
       throw new IllegalArgumentException();
     }
     if (product.getBasePrice() > this._budget) {
-      throw new ProductNotFoundException();
+      throw new OutOfStockException();
     }
     ReceiptItem receipt = store.purchaseProduct(product);
     this._history.add(receipt);
